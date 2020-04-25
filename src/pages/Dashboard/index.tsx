@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import crypto from 'crypto';
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 import total from '../../assets/total.svg';
@@ -24,51 +24,88 @@ interface Transaction {
 }
 
 interface Balance {
-  income: string;
-  outcome: string;
-  total: string;
+  income: number;
+  outcome: number;
+  total: number;
 }
 
+interface ResponseData {
+  transactions: Transaction[];
+  balance: Balance;
+}
 const Dashboard: React.FC = () => {
-  // const [transactions, setTransactions] = useState<Transaction[]>([]);
-  // const [balance, setBalance] = useState<Balance>({} as Balance);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [balance, setBalance] = useState<Balance>({} as Balance);
 
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
-      // TODO
+      const {
+        data: { transactions: trans, balance: balan },
+      } = await api.get<ResponseData>('/transactions');
+      setTransactions(trans);
+      setBalance(balan);
     }
 
     loadTransactions();
   }, []);
 
+  function renderBalance(): JSX.Element {
+    const {
+      total: totalValue,
+      income: incomeValue,
+      outcome: outcomeValue,
+    } = balance;
+    return (
+      <CardContainer>
+        <Card>
+          <header>
+            <p>Entradas</p>
+            <img src={income} alt="Income" />
+          </header>
+          <h1 data-testid="balance-income">
+            {formatValue(Number(incomeValue))}
+          </h1>
+        </Card>
+        <Card>
+          <header>
+            <p>Saídas</p>
+            <img src={outcome} alt="Outcome" />
+          </header>
+          <h1 data-testid="balance-outcome">
+            {formatValue(Number(outcomeValue))}
+          </h1>
+        </Card>
+        <Card total>
+          <header>
+            <p>Total</p>
+            <img src={total} alt="Total" />
+          </header>
+          <h1 data-testid="balance-total">{formatValue(Number(totalValue))}</h1>
+        </Card>
+      </CardContainer>
+    );
+  }
+  function renderTransactions(): JSX.Element[] {
+    return transactions.map(transaction => {
+      const sinal = transaction.type === 'outcome' ? '- ' : '';
+      const transactionValue = sinal + formatValue(Number(transaction.value));
+      return (
+        <tr key={transaction.id}>
+          <td className="title">{transaction.title}</td>
+          <td className={transaction.type}>{transactionValue}</td>
+          <td>{transaction.category.title}</td>
+          <td>
+            {new Date(transaction.created_at).toLocaleDateString('pt-BR')}
+          </td>
+        </tr>
+      );
+    });
+  }
   return (
     <>
       <Header />
       <Container>
-        <CardContainer>
-          <Card>
-            <header>
-              <p>Entradas</p>
-              <img src={income} alt="Income" />
-            </header>
-            <h1 data-testid="balance-income">R$ 5.000,00</h1>
-          </Card>
-          <Card>
-            <header>
-              <p>Saídas</p>
-              <img src={outcome} alt="Outcome" />
-            </header>
-            <h1 data-testid="balance-outcome">R$ 1.000,00</h1>
-          </Card>
-          <Card total>
-            <header>
-              <p>Total</p>
-              <img src={total} alt="Total" />
-            </header>
-            <h1 data-testid="balance-total">R$ 4000,00</h1>
-          </Card>
-        </CardContainer>
-
+        {renderBalance()}
         <TableContainer>
           <table>
             <thead>
@@ -80,20 +117,7 @@ const Dashboard: React.FC = () => {
               </tr>
             </thead>
 
-            <tbody>
-              <tr>
-                <td className="title">Computer</td>
-                <td className="income">R$ 5.000,00</td>
-                <td>Sell</td>
-                <td>20/04/2020</td>
-              </tr>
-              <tr>
-                <td className="title">Website Hosting</td>
-                <td className="outcome">- R$ 1.000,00</td>
-                <td>Hosting</td>
-                <td>19/04/2020</td>
-              </tr>
-            </tbody>
+            <tbody>{renderTransactions()}</tbody>
           </table>
         </TableContainer>
       </Container>
