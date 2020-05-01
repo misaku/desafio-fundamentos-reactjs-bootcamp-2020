@@ -26,6 +26,13 @@
   <a href="#memo-licença">Licença</a>
 </p>
 
+## Desafio e testes fundionando
+### Imagem do desafio:
+<img src="./assets/projeto-pronto.gif" alt="Desafio funcionando" />
+
+### Imagem dos testes:
+<img src="./assets/tests-ok.gif" alt="Desafio funcionando" />
+
 ## :rocket: Sobre o desafio
 
 Nesse desafio, você deve continuar desenvolvendo a aplicação de gestão de transações, a GoFinances. Agora você irá praticar o que você aprendeu até agora no React.js junto com TypeScript, utilizando rotas e envio de arquivos por formulário.
