@@ -4,7 +4,7 @@
   Desafio 07: GoFinances Web
 </h3>
 
-<p align="center">“Não espere resultados brilhantes se suas metas não forem claras”!</blockquote>
+<p align="center">“Não espere resultados brilhantes se suas metas não forem claras”!</p>
 
 <p align="center">
   <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/misaku/desafio-fundamentos-reactjs-bootcamp-2020?color=%2304D361">
@@ -27,10 +27,13 @@
 </p>
 
 ## Desafio e testes fundionando
+
 ### Imagem do desafio:
+
 <img src="./assets/projeto-pronto.gif" alt="Desafio funcionando" />
 
 ### Imagem dos testes:
+
 <img src="./assets/tests-ok.gif" alt="Desafio funcionando" />
 
 ## :rocket: Sobre o desafio
